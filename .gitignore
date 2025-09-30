@@ -1,0 +1,7 @@
+venv
+./venv
+*.txt
+*.jpg
+*.jpeg
+*.png
+*.pt

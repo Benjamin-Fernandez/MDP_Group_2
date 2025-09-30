@@ -164,16 +164,20 @@ class SimulatorPathFinding(Resource):
             robot_direction = content.get('robot_dir', 0)
             num_runs = content.get('num_runs', 1)  # for testing
 
-            optimal_path, commands, total_cost, total_runtime, = None, None, 0, 0
-            for _ in range(num_runs):
-                # Initialize MazeSolver object with robot size of 20x20, bottom left corner of robot at (1,1), facing north.
-                maze_solver = MazeSolver(size_x=20, size_y=20, robot_x=robot_x,
-                                         robot_y=robot_y, robot_direction=robot_direction)
-                # Add each obstacle into the MazeSolver. Each obstacle is defined by its x,y positions, its direction, and its id
-                for ob in obstacles:
-                    maze_solver.add_obstacle(
-                        ob['x'], ob['y'], ob['d'], ob['id'])
+            # Initialize MazeSolver object with robot size of 20x20, bottom left corner of robot at (1,1), facing north.
+            maze_solver = MazeSolver(size_x=20, size_y=20, robot_x=robot_x,
+                                    robot_y=robot_y, robot_direction=robot_direction)
 
+            
+                
+                # Add each obstacle into the MazeSolver. Each obstacle is defined by its x,y positions, its direction, and its id
+            for ob in obstacles:
+                maze_solver.add_obstacle(
+                    ob['x'], ob['y'], ob['d'], ob['id'])
+                    
+            optimal_path, commands, total_cost, total_runtime, = None, None, 0, 0
+            
+            for run_idx in range(num_runs):
                 start = time.time()
                 # Get shortest path
                 optimal_path, cost = maze_solver.get_optimal_path()
@@ -181,17 +185,18 @@ class SimulatorPathFinding(Resource):
                 total_runtime += runtime
                 total_cost += cost
                 logger.debug(
-                    f"Time taken to find shortest path using A* search: {runtime}s")
+                    f"Run {run_idx+1}/{num_runs}: Time taken to find shortest path using A* search: {runtime}s")
                 logger.debug(f"cost to travel: {cost} units")
 
-                # Based on the shortest path, generate commands for the robot
-                motions, obstacle_id_with_signals, scanned_obstacles = maze_solver.optimal_path_to_motion_path(
-                    optimal_path)
-                command_generator = CommandGenerator()
-                commands = command_generator.generate_commands(
-                    motions, obstacle_id_with_signals, scanned_obstacles, optimal_path)
-                logger.debug(
-                    f"Number of obstacles scanned: {len(scanned_obstacles)} / {len(obstacles)}")
+                if run_idx == 0:
+                    # Based on the shortest path, generate commands for the robot
+                    motions, obstacle_id_with_signals, scanned_obstacles = maze_solver.optimal_path_to_motion_path(
+                        optimal_path)
+                    command_generator = CommandGenerator()
+                    commands = command_generator.generate_commands(
+                        motions, obstacle_id_with_signals, scanned_obstacles, optimal_path)
+                    logger.debug(
+                        f"Number of obstacles scanned: {len(scanned_obstacles)} / {len(obstacles)}")
 
             # Get the starting location and add it to path_results
             path_results = []

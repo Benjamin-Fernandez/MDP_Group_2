@@ -79,70 +79,109 @@ class CommandGenerator:
         if motion == Motion.FORWARD:
             return [f"T{self.straight_speed}|{0}|{dist}"]
         elif motion == Motion.REVERSE:
-            # return [f"{self.BACKWARD_DIST_TARGET}{self.straight_speed}{self.SEP}{0}{self.SEP}{dist}"]
+            return [f"{self.BACKWARD_DIST_TARGET}{self.straight_speed}{self.SEP}{0}{self.SEP}{dist}"]
 
-            # Servo tends to drift left when reversing so we force it to the right every 20cm intervals
-            realign_cmds = [
-                f"T{25}|{30}|{0.1}",
-            ]
-            cmds = []
-            # Re-align servo every 20cm
-            for _ in range(int(dist // 20)):
-                cmds.append(
-                    f"t{35}|{0}|{20}")
-                cmds.extend(realign_cmds)
+            # # Servo tends to drift left when reversing so we force it to the right every 20cm intervals
+            # realign_cmds = [
+            #     f"T{25}|{30}|{0.1}",
+            # ]
+            # cmds = []
+            # # Re-align servo every 20cm
+            # for _ in range(int(dist // 20)):
+            #     cmds.append(
+            #         f"t{35}|{0}|{20}")
+            #     cmds.extend(realign_cmds)
 
-            remaining_dist = dist % 20
-            if remaining_dist > 0:
-                cmds.append(
-                    f"t{35}|{0}|{remaining_dist}")
-                # Re-align servo only for distances >= 5cm
-                if remaining_dist >= 5:
-                    cmds.extend(realign_cmds)
-            return cmds
+            # remaining_dist = dist % 20
+            # if remaining_dist > 0:
+            #     cmds.append(
+            #         f"t{35}|{0}|{remaining_dist}")
+            #     # Re-align servo only for distances >= 5cm
+            #     if remaining_dist >= 5:
+            #         cmds.extend(realign_cmds)
+            # return cmds
 
-        # TODO tune commands according to actual robot's hardware.
-        # commented out commands were the desired movement but because of hardware limitations we had to add additional commands to compensate
-        # we tuned our turns to use 3 point turns (turn 45 degrees, reverse, turn 45 degrees again)
         elif motion == Motion.FORWARD_LEFT_TURN:
-            # return [f"T{self.turn_speed}|{-25}|{90}"]
-            return [
-                f"T{30}|{-50}|{46}",
-                f"t{25}|{0}|{23}",
-                f"T{30}|{-50}|{45.5}",
-                # turn right on the spot to re-align servo after left turn
-                f"T{25}|{10}|{0.1}",
-                f"t{25}|{0}|{3}"
-            ]
+           # return [f"T{self.turn_speed}|{-25}|{90}"]
+           return [
+               f"T{30}|{-48}|{43}",      # Reduced: 46→43cm, -50→-48° (tighter arc)
+               f"t{25}|{0}|{21}",        # Reduced: 23→21cm (less reverse swing)
+               f"T{30}|{-48}|{43}",      # Reduced: 45.5→43cm, -50→-48° (tighter arc)
+               # turn right on the spot to re-align servo after left turn
+               f"T{25}|{10}|{0.1}",
+               f"t{25}|{0}|{2}"          # Reduced: 3→2cm (less final adjustment)
+           ]
         elif motion == Motion.FORWARD_RIGHT_TURN:
-            # return [f"T{self.turn_speed}|{25}|{90}"]
-            return [
-                f"T{30}|{50}|{46}",
-                f"t{25}|{0}|{20}",
-                f"T{30}|{50}|{45.7}",
-                f"t{25}|{0}|{4}",
-            ]
+           # return [f"T{self.turn_speed}|{25}|{90}"]
+           return [
+               f"T{30}|{48}|{43}",       # Reduced: 46→43cm, 50→48° (tighter arc)
+               f"t{25}|{0}|{18}",        # Reduced: 20→18cm (less reverse swing)
+               f"T{30}|{48}|{43}",       # Reduced: 45.7→43cm, 50→48° (tighter arc)
+               f"t{25}|{0}|{3}",         # Reduced: 4→3cm (less final adjustment)
+           ]
         elif motion == Motion.REVERSE_LEFT_TURN:
-            # return [f"t{self.turn_speed}|{-25}|{90}"]
-            return [
-                f"T{25}|{0}|{3}",
-                f"t{30}|{-50}|{46}",
-                f"T{25}|{0}|{22}",
-                f"t{30}|{-50}|{46.5}",
-                # turn right on the spot to re-align servo after left turn
-                f"T{25}|{10}|{0.1}"
-            ]
+           # return [f"t{self.turn_speed}|{-25}|{90}"]
+           return [
+               f"T{25}|{0}|{2}",         # Reduced: 3→2cm (less initial forward)
+               f"t{30}|{-48}|{43}",      # Reduced: 46→43cm, -50→-48° (tighter arc)
+               f"T{25}|{0}|{20}",        # Reduced: 22→20cm (less mid-turn forward)
+               f"t{30}|{-48}|{43}",      # Reduced: 46.5→43cm, -50→-48° (tighter arc)
+               # turn right on the spot to re-align servo after left turn
+               f"T{25}|{10}|{0.1}"
+           ]
         elif motion == Motion.REVERSE_RIGHT_TURN:
-            # return [f"t{self.turn_speed}|{25}|{90}"]
-            return [
-                f"T{25}|{0}|{6}",
-                f"t{30}|{48}|{45.4}",
-                f"T{25}|{0}|{14}",
-                f"t{30}|{48}|{45.5}"
-            ]
+           # return [f"t{self.turn_speed}|{25}|{90}"]
+           return [
+               f"T{25}|{0}|{5}",         # Reduced: 6→5cm (less initial forward)
+               f"t{30}|{46}|{42}",       # Reduced: 45.4→42cm, 48→46° (tighter arc)
+               f"T{25}|{0}|{12}",        # Reduced: 14→12cm (less mid-turn forward)
+               f"t{30}|{46}|{42}"        # Reduced: 45.5→42cm, 48→46° (tighter arc)
+           ]
+
+
+        # # OLD CODE 1/10/25
+        # # TODO tune commands according to actual robot's hardware.
+        # # commented out commands were the desired movement but because of hardware limitations we had to add additional commands to compensate
+        # # we tuned our turns to use 3 point turns (turn 45 degrees, reverse, turn 45 degrees again)
+        # elif motion == Motion.FORWARD_LEFT_TURN:
+        #     # return [f"T{self.turn_speed}|{-25}|{90}"]
+        #     return [
+        #         f"T{30}|{-50}|{46}",
+        #         f"t{25}|{0}|{23}",
+        #         f"T{30}|{-50}|{45.5}",
+        #         # turn right on the spot to re-align servo after left turn
+        #         f"T{25}|{10}|{0.1}",
+        #         f"t{25}|{0}|{3}"
+        #     ]
+        # elif motion == Motion.FORWARD_RIGHT_TURN:
+        #     # return [f"T{self.turn_speed}|{25}|{90}"]
+        #     return [
+        #         f"T{30}|{50}|{46}",
+        #         f"t{25}|{0}|{20}",
+        #         f"T{30}|{50}|{45.7}",
+        #         f"t{25}|{0}|{4}",
+        #     ]
+        # elif motion == Motion.REVERSE_LEFT_TURN:
+        #     # return [f"t{self.turn_speed}|{-25}|{90}"]
+        #     return [
+        #         f"T{25}|{0}|{3}",
+        #         f"t{30}|{-50}|{46}",
+        #         f"T{25}|{0}|{22}",
+        #         f"t{30}|{-50}|{46.5}",
+        #         # turn right on the spot to re-align servo after left turn
+        #         f"T{25}|{10}|{0.1}"
+        #     ]
+        # elif motion == Motion.REVERSE_RIGHT_TURN:
+        #     # return [f"t{self.turn_speed}|{25}|{90}"]
+        #     return [
+        #         f"T{25}|{0}|{6}",
+        #         f"t{30}|{48}|{45.4}",
+        #         f"T{25}|{0}|{14}",
+        #         f"t{30}|{48}|{45.5}"
+        #     ]
+
         else:
-            raise ValueError(
-                f"Invalid motion {motion}. This should never happen.")
+            raise ValueError(f"Invalid motion {motion}. This should never happen.")
 
     def _generate_away_command(self, view_state, obstacle: Obstacle) -> list[str]:
         """

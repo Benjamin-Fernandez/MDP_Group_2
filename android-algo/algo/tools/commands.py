@@ -105,36 +105,37 @@ class CommandGenerator:
            # return [f"T{self.turn_speed}|{-25}|{90}"]
            return [
                f"T{30}|{-48}|{43}",      # Reduced: 46→43cm, -50→-48° (tighter arc)
-               f"t{25}|{0}|{21}",        # Reduced: 23→21cm (less reverse swing)
+               f"t{25}|{0}|{23}",        # Reduced: 23→21cm (less reverse swing)
                f"T{30}|{-48}|{43}",      # Reduced: 45.5→43cm, -50→-48° (tighter arc)
-               # turn right on the spot to re-align servo after left turn
                f"T{25}|{10}|{0.1}",
-               f"t{25}|{0}|{2}"          # Reduced: 3→2cm (less final adjustment)
+               f"t{25}|{0}|{6}"          # Reduced: 3→2cm (less final adjustment)
            ]
         elif motion == Motion.FORWARD_RIGHT_TURN:
            # return [f"T{self.turn_speed}|{25}|{90}"]
            return [
-               f"T{30}|{45}|{35}",       # Reduced: 46→43cm, 50→48° (tighter arc)
-               f"t{25}|{0}|{15}",        # Reduced: 20→18cm (less reverse swing)
-               f"T{30}|{45}|{35}",       # Reduced: 45.7→43cm, 50→48° (tighter arc)
-               f"t{25}|{0}|{2}",         # Reduced: 4→3cm (less final adjustment)
+               f"T{30}|{45}|{43}",       # Reduced: 46→43cm, 50→48° (tighter arc)
+               f"t{25}|{0}|{23}",        # Reduced: 20→18cm (less reverse swing)
+               f"T{30}|{45}|{43}",       # Reduced: 45.7→43cm, 50→48° (tighter arc)
+               f"T{25}|{10}|{0.1}",
+               f"t{25}|{0}|{6}",         # Reduced: 4→3cm (less final adjustment)
            ]
         elif motion == Motion.REVERSE_LEFT_TURN:
            # return [f"t{self.turn_speed}|{-25}|{90}"]
            return [
-               f"T{25}|{0}|{1}",         # Reduced: 3→2cm (less initial forward)
-               f"t{30}|{-40}|{30}",      # Reduced: 46→43cm, -50→-48° (tighter arc)
-               f"T{25}|{0}|{15}",        # Reduced: 22→20cm (less mid-turn forward)
-               f"t{30}|{-40}|{30}",      # Reduced: 46.5→43cm, -50→-48° (tighter arc)
-               f"T{25}|{8}|{0.1}"
+               f"T{25}|{0}|{6}",         # Reduced: 3→2cm (less initial forward)
+               f"t{30}|{-48}|{43}",      # Reduced: 46→43cm, -50→-48° (tighter arc)
+               f"T{25}|{0}|{23}",        # Reduced: 22→20cm (less mid-turn forward)
+               f"t{30}|{-48}|{43}",      # Reduced: 46.5→43cm, -50→-48° (tighter arc)
+               f"T{25}|{10}|{0.1}"
            ]
         elif motion == Motion.REVERSE_RIGHT_TURN:
            # return [f"t{self.turn_speed}|{25}|{90}"]
            return [
-               f"T{25}|{0}|{3}",         # Reduced: 6→5cm (less initial forward)
-               f"t{30}|{40}|{30}",       # Reduced: 45.4→42cm, 48→46° (tighter arc)
-               f"T{25}|{0}|{10}",        # Reduced: 14→12cm (less mid-turn forward)
-               f"t{30}|{40}|{30}"        # Reduced: 45.5→42cm, 48→46° (tighter arc)
+               f"T{25}|{0}|{4}",         # Reduced: 6→5cm (less initial forward)
+               f"t{30}|{48}|{43}",       # Reduced: 45.4→42cm, 48→46° (tighter arc)
+               f"T{25}|{0}|{23}",        # Reduced: 14→12cm (less mid-turn forward)
+               f"t{30}|{48}|{43}",        # Reduced: 45.5→42cm, 48→46° 
+               f"T{25}|{10}|{0.1}" 
            ]
 
 
